@@ -25,6 +25,8 @@ const REQUIRED_SERVER_VERSION := 4
 
 var backend := ""
 var connected := false
+## False when training settings are ignored (PrecomputedClient).
+var supports_settings := true
 var server_version := 0  # from the server's hello; older servers send none
 
 var _ws := WebSocketPeer.new()

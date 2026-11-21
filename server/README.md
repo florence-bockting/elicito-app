@@ -25,6 +25,7 @@ Fitted elicito objects are saved to `./elicito-app-results` (change with
 | `src/elicito_app_server/validation.py` | checks for answers and panels |
 | `tests/` | `pytest`; `RUN_ELICITO=1 pytest` also runs real fits |
 | `tools/bart_reference.py` | reference numbers from the elicito docs' BART model |
+| `tools/precompute.py` | fits made in advance for the app's offline mode (see the main README) |
 
 ## Tests
 

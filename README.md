@@ -25,7 +25,13 @@ elicito-app-server         # leave it running
 
 Then open `godot/project.godot` in Godot 4.7 and press **F5** (or run an
 exported build). The header shows **● elicito server** once the app is
-connected. Without the server you can still look around, but not fit.
+connected.
+
+**Without a server** (and always in the web version) the app uses
+**precomputed fits**: real elicito fits, made in advance, of every training
+persona and of every panel of personas. Your own answers get the fit of the
+closest stored answer, and the app says so. Click **Use precomputed fits**
+in the header, or start with `backend=precomputed`.
 
 Start options (after `--` on the command line, or in the page URL of the web
 build, e.g. `index.html?case=bart&embed=1`):
@@ -35,6 +41,7 @@ build, e.g. `index.html?case=bart&embed=1`):
 | `case=<id>` | open this case study directly instead of the gallery |
 | `embed=1` | no way back to the gallery, for embedding in a documentation page |
 | `server=<url>` | the elicito server, default `ws://127.0.0.1:8765/ws` |
+| `backend=precomputed` | no server: fits made in advance (the default on the web) |
 
 ## Repository layout
 
@@ -102,6 +109,23 @@ ElicitationPage --request--> ElicitoClient --WebSocket--> elicito-app-server
    - `model.png` (see `godot/tools/latex/render_model.sh`) and `thumbnail.png`.
 3. Add the `.tres` to `godot/case_studies/catalog.tres`. The tests in
    `tests/unit/test_case_studies.gd` check every case study in the catalog.
+4. Make the precomputed fits for the offline and web version (below).
+
+## Precomputed fits
+
+The fits for the offline mode live in
+`godot/case_studies/<id>/precomputed/fits.json`. Remake them when a case
+study, its personas or elicito change (the test
+`tests/unit/test_precomputed_fits.gd` fails when they no longer match):
+
+```bash
+godot --headless --path godot -s res://tools/export_scenarios.gd   # the answers to fit
+python server/tools/precompute.py                                  # real elicito, ~5 min
+```
+
+Besides the visible personas, `CaseStudy.precompute_personas` lists hidden
+experts whose answers are also fitted, so that more of the users' own
+answers have a close stored fit.
 
 ## Tests
 

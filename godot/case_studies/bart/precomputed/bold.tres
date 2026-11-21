@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BartPersona" format=3]
+
+[ext_resource type="Script" path="res://case_studies/bart/bart_persona.gd" id="1_persona"]
+
+[resource]
+script = ExtResource("1_persona")
+display_name = "Bold expert"
+gammap_low = 0.7
+gammap_high = 1.3
+beta_low = 1.0
+beta_high = 2.5

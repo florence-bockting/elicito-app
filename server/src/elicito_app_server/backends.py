@@ -389,7 +389,9 @@ class MockBackend:
         case = _case(case_id)
         answers = validate_panel(case, experts)
         settings = validate_settings(settings)
+        on_progress = on_progress or (lambda _msg: None)
         started = time.time()
+
         def warmup_progress(msg: dict[str, Any]) -> None:
             on_progress({**msg, "stage": "Warm-up", "loss": None, "phase": 1, "phases": 2})
 

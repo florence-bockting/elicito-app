@@ -8,6 +8,9 @@
 [ext_resource type="Resource" path="res://case_studies/bart/personas/risk_taking.tres" id="6_risky"]
 [ext_resource type="PackedScene" path="res://case_studies/bart/bart_predictions.tscn" id="7_predictions"]
 [ext_resource type="Texture2D" path="res://case_studies/bart/thumbnail.png" id="8_thumb"]
+[ext_resource type="Resource" path="res://case_studies/bart/precomputed/uncertain.tres" id="9_uncertain"]
+[ext_resource type="Resource" path="res://case_studies/bart/precomputed/bold.tres" id="10_bold"]
+[ext_resource type="Resource" path="res://case_studies/bart/precomputed/impulsive.tres" id="11_impulsive"]
 
 [sub_resource type="Resource" id="Resource_ircif"]
 script = ExtResource("2_target")
@@ -63,6 +66,8 @@ parameter_labels = {
 "gammap": "γ⁺ risk propensity"
 }
 personas = Array[ExtResource("3_persona")]([ExtResource("4_cautious"), ExtResource("5_realistic"), ExtResource("6_risky")])
+precompute_personas = Array[ExtResource("3_persona")]([ExtResource("9_uncertain"), ExtResource("10_bold"), ExtResource("11_impulsive")])
+precomputed_fits = "res://case_studies/bart/precomputed/fits.json"
 personas_text = "[font_size=18][b][color=#1f2a44]From attitude to your two answers[/color][/b][/font_size]
 The questions in the next tab are about behaviour you can picture, not about γ⁺ and β directly. This is how the two traits show up in your answers:
 

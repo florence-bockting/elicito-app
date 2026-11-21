@@ -33,12 +33,19 @@ extends Resource
 ## Roles the user can play (empty = only "Myself").
 @export var personas: Array[ExpertPersona] = []
 
+## Extra experts, never shown, whose answers are also fitted in advance
+## for the web version (see tools/export_scenarios.gd).
+@export var precompute_personas: Array[ExpertPersona] = []
+
 @export_group("Predictions")
 ## The "Predictions" tab of a fitted model. Its root must extend
 ## PredictionsView; it shows simulated outcomes of the fitted prior.
 @export var predictions_scene: PackedScene
 ## Simulated outcomes the server sends with a fit.
 @export var replay_n: int = 24
+## Fits made in advance with elicito, for when no server is running (the
+## web version). Written by server/tools/precompute.py; see PrecomputedClient.
+@export_file("*.json") var precomputed_fits: String = ""
 
 
 ## The intro for the elicitation tab. Subclasses fill in placeholders.
@@ -51,6 +58,28 @@ func target(target_name: String) -> TargetSpec:
 		if t.name == target_name:
 			return t
 	return null
+
+
+## A persona's suggested chips per target, as "Fill in the persona's
+## answer" places them.
+func persona_chips(p: ExpertPersona) -> Dictionary:
+	var chips := {}
+	var samples := p.simulate(4000)
+	for spec in targets:
+		if samples.has(spec.name):
+			chips[spec.name] = QuantileMath.chips_from_samples(samples[spec.name], spec)
+	return chips
+
+
+## The quantiles those chips give, keyed by target: what the app sends to
+## elicito when the user fills in this persona's answer.
+func persona_answers(p: ExpertPersona) -> Dictionary:
+	var out := {}
+	var chips := persona_chips(p)
+	for spec in targets:
+		if chips.has(spec.name):
+			out[spec.name] = Array(QuantileMath.quantiles_from_histogram(chips[spec.name], spec.bin_edges(), spec.probs))
+	return out
 
 
 ## "γ⁺" from "γ⁺ risk propensity": the label's first word.

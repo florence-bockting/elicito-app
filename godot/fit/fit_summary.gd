@@ -39,6 +39,24 @@ static func match_line(case_study: CaseStudy, answers: Dictionary, simulated: Di
 	return " · ".join(parts)
 
 
+## BBCode: where a precomputed fit comes from, or "" for a live fit.
+static func precomputed_note(result: Dictionary) -> String:
+	if not result.has("precomputed"):
+		return ""
+	var info: Dictionary = result.precomputed
+	var how := "[color=%s][b]Precomputed with elicito[/b][/color]" % C_ROUGH
+	if info.get("exact", false):
+		return how + " for exactly these answers (no elicito server running)."
+	if info.has("scenario"):
+		return how + ": the fit of the [b]%s[/b]'s answers, the closest stored answers to yours. Start the elicito server to fit your own answers." % str(info.scenario).to_lower()
+	var pairs: Array[String] = []
+	var members: Dictionary = info.get("members", {})
+	for requested in members:
+		if requested != members[requested]:
+			pairs.append("%s → %s" % [requested, str(members[requested]).to_lower()])
+	return how + ": the panel fit of the closest stored experts (%s). Start the elicito server to fit your own answers." % ", ".join(pairs)
+
+
 ## BBCode: the fitted prior of one expert.
 static func describe_single(case_study: CaseStudy, result: Dictionary) -> String:
 	var lines: Array[String] = ["[b]Fitted prior[/b]"]
@@ -48,6 +66,8 @@ static func describe_single(case_study: CaseStudy, result: Dictionary) -> String
 		lines.append("  %s ~ Uniform(%.2f, %.2f)" % [case_study.parameter_labels.get(p, p), bounds[0], bounds[1]])
 	if result.get("backend") == "mock":
 		lines.append("\n" + MOCK_NOTE)
+	if result.has("precomputed"):
+		lines.append("\n" + precomputed_note(result))
 	return "\n".join(lines)
 
 
@@ -70,4 +90,6 @@ static func describe_panel(case_study: CaseStudy, result: Dictionary, experts: A
 		lines.append("  %s: %.2f to %.2f" % [case_study.parameter_labels.get(p, p), population[p].q05, population[p].q95])
 	if result.get("backend") == "mock":
 		lines.append("\n" + MOCK_NOTE)
+	if result.has("precomputed"):
+		lines.append("\n" + precomputed_note(result))
 	return "\n".join(lines)

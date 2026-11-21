@@ -218,7 +218,14 @@ func _update_steps() -> void:
 
 
 func _update_settings_button() -> void:
-	settings_button.text = "Training settings: " + settings_dialog.summary()
+	if client.supports_settings:
+		settings_button.disabled = false
+		settings_button.text = "Training settings: " + settings_dialog.summary()
+		settings_button.tooltip_text = "Change how elicito trains the prior: epochs, seed, number of runs and more."
+	else:
+		settings_button.disabled = true
+		settings_button.text = "Training settings: elicito's defaults"
+		settings_button.tooltip_text = "The precomputed fits used elicito's default settings. Start the elicito server to change them."
 
 
 func _answers() -> Dictionary:
@@ -243,7 +250,7 @@ func _persona_name() -> String:
 
 func _on_persona_selected(index: int) -> void:
 	persona = null if index == 0 else case_study.personas[index - 1]
-	persona_chips = _chips_for(persona) if persona else {}
+	persona_chips = case_study.persona_chips(persona) if persona else {}
 	show_me_toggle.set_pressed_no_signal(false)
 	show_me_toggle.visible = persona != null
 	autofill_button.visible = persona != null
@@ -285,16 +292,6 @@ func _on_autofill_pressed() -> void:
 	_refresh()
 
 
-## A persona's suggested chips, keyed by target name.
-func _chips_for(p: ExpertPersona) -> Dictionary:
-	var chips := {}
-	var samples := p.simulate(4000)
-	for spec in case_study.targets:
-		if samples.has(spec.name):
-			chips[spec.name] = QuantileMath.chips_from_samples(samples[spec.name], spec)
-	return chips
-
-
 # ---------------------------------------------------------------- fitting
 
 func _on_reset_pressed() -> void:
@@ -332,7 +329,10 @@ func _on_fit_finished(result: Dictionary) -> void:
 	fitting = false
 	var elapsed := float(result.get("elapsed", 0.0))
 	if result.get("panel", false):
-		fit_progress.finish(result.get("loss_history", []), "Panel fitted in %.0f s. Results are in the Fitted model tab." % elapsed)
+		var panel_message := "Panel fitted in %.0f s." % elapsed
+		if result.has("precomputed"):
+			panel_message = "Precomputed panel fit loaded."
+		fit_progress.finish(result.get("loss_history", []), panel_message + " Results are in the Fitted model tab.")
 		session.log_event("panel_result", {
 			"request_id": result.get("request_id"),
 			"backend": result.get("backend"),
@@ -352,7 +352,12 @@ func _on_fit_finished(result: Dictionary) -> void:
 		for target_name in roulettes:
 			if simulated.has(target_name):
 				roulettes[target_name].set_model_quantiles(PackedFloat64Array(simulated[target_name]))
-		fit_progress.finish(result.get("loss_history", []), "Fit #%d done in %.1f s. Results are in the Fitted model tab." % [fit_count, elapsed])
+		var message := "Fit #%d done in %.1f s." % [fit_count, elapsed]
+		if result.has("precomputed"):
+			var info: Dictionary = result.precomputed
+			message = "Precomputed fit loaded." if info.get("exact", false) else (
+				"Precomputed fit of the %s's answers loaded (the closest to yours)." % str(info.get("scenario", "")).to_lower())
+		fit_progress.finish(result.get("loss_history", []), message + " Results are in the Fitted model tab.")
 		var history: Array = result.get("loss_history", [])
 		session.log_event("fit_result", {
 			"request_id": result.get("request_id"),

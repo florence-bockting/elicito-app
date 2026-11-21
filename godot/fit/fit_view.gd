@@ -62,6 +62,8 @@ func show_single(result: Dictionary) -> void:
 	match_caption.text = SINGLE_CAPTION + "\n" + FitSummary.match_line(case_study, answers, simulated)
 	if result.get("backend") == "mock":
 		match_caption.text += "\n" + FitSummary.MOCK_NOTE
+	if result.has("precomputed"):
+		match_caption.text = FitSummary.precomputed_note(result) + "\n" + match_caption.text
 	prior_plot.add_fit(result.get("priors", {}))
 	prior_text.text = FitSummary.describe_single(case_study, result)
 	if predictions:
@@ -87,13 +89,17 @@ func show_panel(result: Dictionary, experts: Array) -> void:
 		if histories.has(e.name):
 			convergence.append({"name": e.name, "color": e.color, "history": histories[e.name]})
 		if simulated.has(e.name):
-			matches.append({"name": e.name, "color": e.color, "expert": e.answers, "model": simulated[e.name]})
-			lines.append("[color=#%s][b]%s[/b][/color] %s" % [e.color.to_html(false), e.name, FitSummary.match_line(case_study, e.answers, simulated[e.name])])
+			# the answers that were fitted (a precomputed fit used stored ones)
+			var fitted: Dictionary = result.get("answers", {}).get(e.name, e.answers)
+			matches.append({"name": e.name, "color": e.color, "expert": fitted, "model": simulated[e.name]})
+			lines.append("[color=#%s][b]%s[/b][/color] %s" % [e.color.to_html(false), e.name, FitSummary.match_line(case_study, fitted, simulated[e.name])])
 		if replays.has(e.name):
 			rows.append({"name": e.name, "color": e.color, "draws": replays[e.name]})
 	final_loss.set_points(result.get("loss_history", []))
 	convergence_plot.show_series(convergence)
 	match_plot.show_series(matches, result.get("probs", {}))
+	if result.has("precomputed"):
+		lines.push_front(FitSummary.precomputed_note(result))
 	match_caption.text = "\n".join(lines)
 	prior_plot.show_panel(plotted, result.get("population", {}))
 	prior_text.text = FitSummary.describe_panel(case_study, result, experts)
