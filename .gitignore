@@ -1,0 +1,19 @@
+# Godot 4.1+ (https://docs.godotengine.org/en/stable/tutorials/best_practices/version_control_systems.html)
+.godot/
+*.translation
+# exports (built by CI)
+build/
+export_presets.cfg.local
+
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+# fitted elicito objects written by the server
+elicito-app-results/
+
+# LaTeX
+godot/tools/latex/node_modules/
+*.aux
+*.log

@@ -1,0 +1,174 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://elicitation/elicitation_page.gd" id="1_page"]
+[ext_resource type="PackedScene" path="res://elicitation/fit_progress.tscn" id="2_progress"]
+[ext_resource type="PackedScene" path="res://elicitation/expert_panel_box.tscn" id="3_panel_box"]
+
+[node name="ElicitationPage" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_page")
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Left" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Intro" type="Label" parent="Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.23, 0.23, 0.23, 1)
+autowrap_mode = 3
+
+[node name="StepsText" type="RichTextLabel" parent="Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+fit_content = true
+
+[node name="PersonaBar" type="HBoxContainer" parent="Left"]
+layout_mode = 2
+
+[node name="PlayAsLabel" type="Label" parent="Left/PersonaBar"]
+layout_mode = 2
+text = "Play as:"
+
+[node name="PersonaPicker" type="OptionButton" parent="Left/PersonaBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ShowMeToggle" type="CheckButton" parent="Left/PersonaBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show me the persona's answer"
+
+[node name="AutofillButton" type="Button" parent="Left/PersonaBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+tooltip_text = "Places the persona's suggested chips on both questions. You can still move them afterwards."
+text = "Fill in the persona's answer"
+
+[node name="MultiRow" type="HBoxContainer" parent="Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MultiCheck" type="CheckBox" parent="Left/MultiRow"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Collect the answers of several experts, one after another, and fit them together."
+text = "Multiple experts"
+
+[node name="ExpertName" type="LineEdit" parent="Left/MultiRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+placeholder_text = "Expert name"
+
+[node name="AddExpertButton" type="Button" parent="Left/MultiRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+disabled = true
+text = "Add to expert panel"
+
+[node name="BriefingCard" type="PanelContainer" parent="Left"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="BriefingRow" type="HBoxContainer" parent="Left/BriefingCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BriefingPortrait" type="TextureRect" parent="Left/BriefingCard/BriefingRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BriefingText" type="RichTextLabel" parent="Left/BriefingCard/BriefingRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = true
+
+[node name="Tabs" type="TabContainer" parent="Left"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Hint" type="Label" parent="Left/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3
+
+[node name="ResetButton" type="Button" parent="Left/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear this question"
+
+[node name="FitButton" type="Button" parent="Left/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Fit prior with elicito"
+
+[node name="Right" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SettingsButton" type="Button" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Change how elicito trains the prior: epochs, seed, number of runs and more."
+text = "Training settings"
+
+[node name="FitProgress" parent="Right" instance=ExtResource("2_progress")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExpertPanelBox" parent="Right" instance=ExtResource("3_panel_box")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="SessionButtons" type="HBoxContainer" parent="Right"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Right/SessionButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save session log"
+
+[node name="OpenButton" type="Button" parent="Right/SessionButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Open folder"
+
+[node name="SavedLabel" type="Label" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 1

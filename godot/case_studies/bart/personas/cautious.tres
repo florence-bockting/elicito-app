@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BartPersona" format=3]
+
+[ext_resource type="Texture2D" path="res://case_studies/bart/personas/cautious.svg" id="1_ti2lb"]
+[ext_resource type="Script" path="res://case_studies/bart/bart_persona.gd" id="1_yggb8"]
+
+[resource]
+script = ExtResource("1_yggb8")
+display_name = "Cautious expert"
+briefing = "You have run the BART with hesitant, cautious participants like Mila for years. They plan only one or two pumps, and they don't stick to that plan reliably: in about half of the trials they cash in without pumping at all, and they almost never go past two pumps. Few of their balloons pop (about one in eight)."
+character_name = "Mila"
+tagline = "Plays it safe, but decides on a whim"
+profile = "[b]Risk attitude: low.[/b] Mila hates losing what she has banked, so her plan is tiny: one or two pumps.
+[b]Consistency: low.[/b] She is hesitant and decides on a whim. In about half of her trials she cashes in without pumping at all; in others she pumps once more than she meant to."
+portrait = ExtResource("1_ti2lb")
+gammap_low = 0.1
+gammap_high = 0.35
+beta_low = 0.2
+beta_high = 0.6
+color = Color(0.2901961, 0.5647059, 0.7607843, 1)

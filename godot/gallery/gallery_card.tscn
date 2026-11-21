@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://gallery/gallery_card.gd" id="1_card"]
+
+[node name="GalleryCard" type="PanelContainer"]
+custom_minimum_size = Vector2(360, 0)
+script = ExtResource("1_card")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Thumbnail" type="TextureRect" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CardTitle" type="Label" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
+theme_override_font_sizes/font_size = 20
+autowrap_mode = 3
+
+[node name="Summary" type="Label" parent="VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="OpenButton" type="Button" parent="VBox/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Open"
+
+[node name="DocsButton" type="LinkButton" parent="VBox/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.16, 0.36, 0.67, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.25, 0.5, 1)
+text = "Read the case study"

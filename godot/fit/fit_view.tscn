@@ -1,0 +1,121 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://fit/fit_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://common/loss_plot.gd" id="2_loss"]
+[ext_resource type="Script" path="res://fit/convergence_plot.gd" id="3_convergence"]
+[ext_resource type="Script" path="res://fit/prior_plot.gd" id="4_prior"]
+[ext_resource type="Script" path="res://fit/match_plot.gd" id="5_match"]
+
+[node name="FitView" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+script = ExtResource("1_view")
+
+[node name="DiagnosticsScroll" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 0
+
+[node name="DiagnosticsPage" type="VBoxContainer" parent="DiagnosticsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="ConvergenceTitle" type="Label" parent="DiagnosticsScroll/DiagnosticsPage"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
+theme_override_font_sizes/font_size = 17
+text = "Did the training converge?"
+
+[node name="ConvergenceCaption" type="Label" parent="DiagnosticsScroll/DiagnosticsPage"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/font_size = 13
+text = "Left: the loss. Right: the prior's lower and upper bound at every training step. Lines that end flat mean the fit has settled."
+autowrap_mode = 3
+
+[node name="ConvergenceRow" type="HBoxContainer" parent="DiagnosticsScroll/DiagnosticsPage"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FinalLoss" type="Control" parent="DiagnosticsScroll/DiagnosticsPage/ConvergenceRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 240)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_loss")
+
+[node name="ConvergencePlot" type="Control" parent="DiagnosticsScroll/DiagnosticsPage/ConvergenceRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.4
+script = ExtResource("3_convergence")
+
+[node name="MatchTitle" type="Label" parent="DiagnosticsScroll/DiagnosticsPage"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
+theme_override_font_sizes/font_size = 17
+text = "Does the fitted prior reproduce the answers?"
+
+[node name="MatchCaption" type="RichTextLabel" parent="DiagnosticsScroll/DiagnosticsPage"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+bbcode_enabled = true
+fit_content = true
+
+[node name="MatchPlot" type="Control" parent="DiagnosticsScroll/DiagnosticsPage"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 380)
+layout_mode = 2
+script = ExtResource("5_match")
+
+[node name="PriorsScroll" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 1
+
+[node name="FittedBody" type="HBoxContainer" parent="PriorsScroll"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="PriorPlot" type="Control" parent="PriorsScroll/FittedBody"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_prior")
+
+[node name="FittedRight" type="VBoxContainer" parent="PriorsScroll/FittedBody"]
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+
+[node name="PriorText" type="RichTextLabel" parent="PriorsScroll/FittedBody/FittedRight"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+bbcode_enabled = true
+text = "The fitted prior will appear here."
+
+[node name="PredictionsScroll" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 2

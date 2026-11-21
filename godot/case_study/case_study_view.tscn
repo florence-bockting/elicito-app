@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://case_study/case_study_view.gd" id="1_view"]
+[ext_resource type="PackedScene" path="res://case_study/personas_page.tscn" id="2_personas"]
+[ext_resource type="PackedScene" path="res://elicitation/elicitation_page.tscn" id="3_elicitation"]
+[ext_resource type="PackedScene" path="res://fit/fit_view.tscn" id="4_fit"]
+
+[node name="CaseStudyView" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+current_tab = 0
+script = ExtResource("1_view")
+
+[node name="ModelText" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+selection_enabled = true
+metadata/_tab_index = 0
+
+[node name="PersonasPage" parent="." instance=ExtResource("2_personas")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="ElicitationPage" parent="." instance=ExtResource("3_elicitation")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+metadata/_tab_index = 2
+
+[node name="FitView" parent="." instance=ExtResource("4_fit")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3

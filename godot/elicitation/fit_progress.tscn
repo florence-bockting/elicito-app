@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://elicitation/fit_progress.gd" id="1_progress"]
+[ext_resource type="Script" path="res://common/loss_plot.gd" id="2_loss"]
+
+[node name="FitProgress" type="VBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_progress")
+
+[node name="FitStatus" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Answer every question with all chips, then fit."
+autowrap_mode = 3
+
+[node name="Progress" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+show_percentage = false
+
+[node name="LossPlot" type="Control" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+script = ExtResource("2_loss")

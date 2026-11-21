@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BartPersona" format=3]
+
+[ext_resource type="Texture2D" path="res://case_studies/bart/personas/realistic.svg" id="1_31qwd"]
+[ext_resource type="Script" path="res://case_studies/bart/bart_persona.gd" id="1_xn1cn"]
+
+[resource]
+script = ExtResource("1_xn1cn")
+display_name = "Realistic expert"
+briefing = "You have watched hundreds of ordinary adults like Sam do this task. They plan about two to five pumps, most often three or four, and they follow that plan only loosely. Because some balloons pop before people reach their plan (about three in ten), a single trial usually ends after one to three pumps."
+character_name = "Sam"
+tagline = "An ordinary participant: some risk, some noise"
+profile = "[b]Risk attitude: medium.[/b] Sam plans two to five pumps, most often three or four.
+[b]Consistency: medium.[/b] He roughly follows his plan, but not exactly: when the balloon survives, he stops within one pump of his plan in about four out of ten trials."
+portrait = ExtResource("1_31qwd")
+gammap_low = 0.3
+gammap_high = 0.8
+beta_low = 0.5
+beta_high = 1.5
+color = Color(0.9490196, 0.72156864, 0.29411766, 1)

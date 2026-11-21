@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://case_studies/bart/bart_predictions.gd" id="1_view"]
+[ext_resource type="Script" path="res://fit/replay_grid.gd" id="2_grid"]
+[ext_resource type="Script" path="res://case_studies/bart/panel_replay.gd" id="3_panel"]
+[ext_resource type="Script" path="res://case_studies/bart/wallet_view.gd" id="4_wallet"]
+[ext_resource type="PackedScene" path="res://case_studies/bart/balloon.tscn" id="5_balloon"]
+
+[node name="BartPredictions" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+script = ExtResource("1_view")
+balloon_scene = ExtResource("5_balloon")
+
+[node name="ReplayHeader" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ReplayTitle" type="Label" parent="ReplayHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
+theme_override_font_sizes/font_size = 17
+text = "What your prior implies"
+
+[node name="ReplayCaption" type="Label" parent="ReplayHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+
+[node name="ReplayButton" type="Button" parent="ReplayHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Replay"
+
+[node name="Replay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("2_grid")
+
+[node name="PanelReplay" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("3_panel")
+
+[node name="EarningsRow" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="WalletView" type="Control" parent="EarningsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_wallet")

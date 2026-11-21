@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CaseStudyCatalog" format=3]
+
+[ext_resource type="Script" path="res://case_study/case_study_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://case_study/case_study.gd" id="2_case"]
+[ext_resource type="Resource" path="res://case_studies/bart/bart.tres" id="3_bart"]
+
+[resource]
+script = ExtResource("1_catalog")
+case_studies = Array[ExtResource("2_case")]([ExtResource("3_bart")])
