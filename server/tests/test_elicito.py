@@ -53,3 +53,18 @@ def test_real_elicito_uses_settings(tmp_path):
     )
     assert result["settings"]["replications"] == 2
     assert result["priors"]["gammap"][1] > result["priors"]["gammap"][0]
+
+
+@pytest.mark.elicito
+def test_real_elicito_independent_panel(tmp_path):
+    experts = {n: expert_answers(g, b) for n, (g, b) in list(PERSONAS.items())[:2]}
+    updates = []
+    result = ElicitoBackend(tmp_path).fit_panel(
+        "bart", experts, replay_n=8, on_progress=updates.append, pooling="independent"
+    )
+    assert result["pooling"] == "independent" and result["tau"] == {}
+    assert {(u["phase"], u["phases"]) for u in updates if u["stage"] == "Training"} == {(1, 2), (2, 2)}
+    # no pooling: each expert's prior is that expert's own fit
+    single = ElicitoBackend(tmp_path).fit("bart", experts["Mila"], replay_n=4)
+    assert result["expert_priors"]["Mila"] == pytest.approx(single["priors"], abs=1e-6)
+    assert set(result["population"]) == {"gammap", "beta"}

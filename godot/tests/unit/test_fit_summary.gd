@@ -18,8 +18,8 @@ func test_verdicts() -> void:
 func test_match_line_names_every_question() -> void:
 	var answers := {"pumps": [2, 3, 4, 5, 6], "omega": [3, 4, 5, 6, 7]}
 	var line := FitSummary.match_line(case_study, answers, answers)
-	assert_string_contains(line, "Pumps in one trial: ")
-	assert_string_contains(line, "Planned pumps ω: ")
+	for spec in case_study.targets:
+		assert_string_contains(line, spec.title + ": ")
 
 
 func test_describe_single() -> void:

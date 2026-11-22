@@ -1,8 +1,8 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://db8ilmesatg6p"]
 
-[ext_resource type="Script" path="res://case_study/personas_page.gd" id="1_page"]
+[ext_resource type="Script" uid="uid://c325hwl7aseg3" path="res://case_study/personas_page.gd" id="1_page"]
 
-[node name="PersonasPage" type="ScrollContainer"]
+[node name="PersonasPage" type="ScrollContainer" unique_id=1611518119]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,23 +11,24 @@ grow_vertical = 2
 horizontal_scroll_mode = 0
 script = ExtResource("1_page")
 
-[node name="PersonasBox" type="VBoxContainer" parent="."]
+[node name="PersonasBox" type="VBoxContainer" parent="." unique_id=1007215585]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="PersonasIntro" type="Label" parent="PersonasBox"]
+[node name="PersonasIntro" type="Label" parent="PersonasBox" unique_id=657723238]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.23, 0.23, 0.23, 1)
 text = "Experts who each know one kind of participant. Get to know them here, then play one in the next tab, or answer as yourself."
 autowrap_mode = 3
 
-[node name="PersonaCards" type="HBoxContainer" parent="PersonasBox"]
+[node name="PersonaCards" type="HBoxContainer" parent="PersonasBox" unique_id=486839014]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="PersonasText" type="RichTextLabel" parent="PersonasBox"]
+[node name="PersonasText" type="RichTextLabel" parent="PersonasBox" unique_id=1427137196]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
@@ -35,3 +36,13 @@ theme_override_font_sizes/normal_font_size = 15
 theme_override_font_sizes/bold_font_size = 15
 bbcode_enabled = true
 fit_content = true
+
+[node name="NextRow" type="HBoxContainer" parent="PersonasBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="NextButton" type="Button" parent="PersonasBox/NextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Next →"

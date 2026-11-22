@@ -1,19 +1,19 @@
-[gd_resource type="Resource" script_class="BartPersona" format=3]
+[gd_resource type="Resource" script_class="BartPersona" format=3 uid="uid://cjclnt6ele1xd"]
 
-[ext_resource type="Script" path="res://case_studies/bart/bart_persona.gd" id="1_0gwwa"]
-[ext_resource type="Texture2D" path="res://case_studies/bart/personas/risk_taking.svg" id="1_uw47l"]
+[ext_resource type="Script" uid="uid://bsk4vghsbxqvf" path="res://case_studies/bart/bart_persona.gd" id="1_0gwwa"]
+[ext_resource type="Texture2D" uid="uid://c40jys0d4i3ma" path="res://case_studies/bart/personas/risk_taking.svg" id="1_uw47l"]
 
 [resource]
 script = ExtResource("1_0gwwa")
-display_name = "Risk-taking expert"
-briefing = "You study strategic thrill-seekers like Jonas. They plan big, 7 to 12 pumps, and they stick to that plan. But about three out of four of their balloons pop on the way, so a single trial usually ends somewhere between 2 and 7 pumps."
-character_name = "Jonas"
-tagline = "Takes big risks and sticks strictly to his plan"
-profile = "[b]Risk attitude: high.[/b] Jonas wants the big payout and plans 7 to 12 pumps.
-[b]Consistency: high.[/b] He follows his plan like a checklist: when the balloon survives, he stops within one pump of his plan in seven out of ten trials. But it usually doesn't survive: about three out of four of his balloons pop on the way."
-portrait = ExtResource("1_uw47l")
 gammap_low = 1.0
 gammap_high = 2.0
 beta_low = 2.0
 beta_high = 4.0
+display_name = "Risk-taking expert"
+briefing = "You study strategic thrill-seekers like Jonas. They plan big, 7 to 12 pumps, and they stick to that plan. But about three out of four of their balloons pop on the way, so a single trial usually ends somewhere between 2 and 7 pumps."
 color = Color(0.8980392, 0.3764706, 0.30980393, 1)
+character_name = "Jonas"
+tagline = "Takes big risks and sticks strictly to his plan"
+profile = "[color=#a8540f]Risk attitude: high.[/color] Jonas wants the big payout and plans 7 to 12 pumps.
+[color=#a8540f]Consistency: high.[/color] He follows his plan like a checklist: when the balloon survives, he stops within one pump of his plan in seven out of ten trials. "
+portrait = ExtResource("1_uw47l")

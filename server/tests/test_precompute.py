@@ -26,6 +26,11 @@ def test_precompute_fits_every_scenario():
     assert all(s["result"]["type"] == "result" and s["result"]["saved_eliobj"] is None for s in fits["single"])
     assert [p["members"] for p in fits["panels"]] == [names[:2], names]
     assert fits["panels"][1]["result"]["experts"] == names
+    # the independent panels reuse the single fits, without pooling
+    ind = fits["independent_panels"][1]["result"]
+    assert [p["members"] for p in fits["independent_panels"]] == [names[:2], names]
+    assert ind["pooling"] == "independent" and ind["panel_priors"] == {}
+    assert ind["expert_priors"][names[0]] == fits["single"][0]["result"]["priors"]
     assert len(fits["single"][0]["result"]["replay"]) == 6
     assert fits["settings"]["epochs"] == 400
     json.dumps(fits)  # plain JSON, nothing numpy left

@@ -48,8 +48,9 @@ log = logging.getLogger("elicito-app-server")
 
 # Bumped whenever the protocol gains something the client relies on, so an
 # old server that is still running can be recognised (1: fits, 2: panels,
-# 3: training settings, 4: warm-up phase and fit diagnostics).
-PROTOCOL_VERSION = 4
+# 3: training settings, 4: warm-up phase and fit diagnostics, 5: panels
+# with independent fits, "pooling" in fit_panel).
+PROTOCOL_VERSION = 5
 
 # Fitted elicito objects are saved here (override with --results).
 DEFAULT_RESULTS = Path.cwd() / "elicito-app-results"
@@ -83,15 +84,17 @@ async def _run_fit(ws: WebSocket, msg: dict[str, Any]) -> None:
         loop.call_soon_threadsafe(queue.put_nowait, update)
 
     is_panel = msg.get("type") == "fit_panel"
+    args = [
+        msg.get("case_study", "bart"),
+        msg.get("experts" if is_panel else "expert", {}),
+        int(msg.get("replay_n", 24)),
+        on_progress,
+        msg.get("settings"),
+    ]
+    if is_panel:
+        args.append(msg.get("pooling", "partial"))
     job = asyncio.create_task(
-        asyncio.to_thread(
-            _backend().fit_panel if is_panel else _backend().fit,
-            msg.get("case_study", "bart"),
-            msg.get("experts" if is_panel else "expert", {}),
-            int(msg.get("replay_n", 24)),
-            on_progress,
-            msg.get("settings"),
-        )
+        asyncio.to_thread(_backend().fit_panel if is_panel else _backend().fit, *args)
     )
     started = time.time()
     while not job.done():

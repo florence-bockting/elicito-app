@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://dwyy03egw8mu0"]
 
-[ext_resource type="Script" path="res://case_studies/bart/balloon.gd" id="1_balloon"]
+[ext_resource type="Script" uid="uid://b14jyfqcjaypc" path="res://case_studies/bart/balloon.gd" id="1_balloon"]
 
-[node name="Balloon" type="Node2D"]
+[node name="Balloon" type="Node2D" unique_id=84814512]
 script = ExtResource("1_balloon")
 
-[node name="Pop" type="CPUParticles2D" parent="."]
+[node name="Pop" type="CPUParticles2D" parent="." unique_id=1867729276]
 emitting = false
 amount = 26
 lifetime = 0.7
@@ -19,7 +19,7 @@ initial_velocity_max = 210.0
 scale_amount_min = 2.5
 scale_amount_max = 5.0
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1138450259]
 offset_left = -45.0
 offset_top = 66.0
 offset_right = 45.0
@@ -28,7 +28,7 @@ theme_override_colors/font_color = Color(0.23, 0.23, 0.23, 1)
 theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
 
-[node name="Money" type="Label" parent="."]
+[node name="Money" type="Label" parent="." unique_id=20233122]
 offset_left = -45.0
 offset_top = 82.0
 offset_right = 45.0

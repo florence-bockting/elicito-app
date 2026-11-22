@@ -44,11 +44,11 @@ static func precomputed_note(result: Dictionary) -> String:
 	if not result.has("precomputed"):
 		return ""
 	var info: Dictionary = result.precomputed
-	var how := "[color=%s][b]Precomputed with elicito[/b][/color]" % C_ROUGH
+	var how := "[color=%s]Precomputed with elicito[/color]" % C_ROUGH
 	if info.get("exact", false):
 		return how + " for exactly these answers (no elicito server running)."
 	if info.has("scenario"):
-		return how + ": the fit of the [b]%s[/b]'s answers, the closest stored answers to yours. Start the elicito server to fit your own answers." % str(info.scenario).to_lower()
+		return how + ": the fit of the [color=#a8540f]%s[/color]'s answers, the closest stored answers to yours. Start the elicito server to fit your own answers." % str(info.scenario).to_lower()
 	var pairs: Array[String] = []
 	var members: Dictionary = info.get("members", {})
 	for requested in members:
@@ -74,7 +74,8 @@ static func describe_single(case_study: CaseStudy, result: Dictionary) -> String
 ## BBCode: each expert's prior, then the panel's. `experts`: [{"name", "color"}].
 static func describe_panel(case_study: CaseStudy, result: Dictionary, experts: Array) -> String:
 	var priors: Dictionary = result.get("expert_priors", {})
-	var lines: Array[String] = ["[b]Panel of %d experts[/b]" % experts.size()]
+	var independent: bool = result.get("pooling", "partial") == "independent"
+	var lines: Array[String] = ["[b]Panel of %d experts[/b] · %s" % [experts.size(), "independent fits" if independent else "partial pooling"]]
 	for e in experts:
 		if not priors.has(e.name):
 			continue
@@ -82,9 +83,9 @@ static func describe_panel(case_study: CaseStudy, result: Dictionary, experts: A
 		for p in priors[e.name]:
 			var b: Array = priors[e.name][p]
 			parts.append("%s %.2f–%.2f" % [case_study.parameter_symbol(p), b[0], b[1]])
-		lines.append("  [color=#%s][b]%s[/b][/color]  %s" % [e.color.to_html(false), e.name, ", ".join(parts)])
+		lines.append("  [color=#%s]%s[/color]  %s" % [e.color.to_html(false), e.name, ", ".join(parts)])
 	lines.append("")
-	lines.append("[b]The panel as a whole[/b] (90% of its prior)")
+	lines.append("[b]The panel as a whole[/b] (90%% of its prior%s)" % (", an equal mix of the experts' priors" if independent else ""))
 	var population: Dictionary = result.get("population", {})
 	for p in population:
 		lines.append("  %s: %.2f to %.2f" % [case_study.parameter_labels.get(p, p), population[p].q05, population[p].q95])

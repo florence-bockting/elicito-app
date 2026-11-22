@@ -9,6 +9,11 @@ extends Control
 ##   server=<ws url>  elicito server (default ws://127.0.0.1:8765/ws)
 ##   backend=precomputed  fits made in advance, no server (the default on the web)
 
+const SYMBOL_FONT: Font = preload("res://theme/fonts/DejaVuSans-symbols.ttf")
+## The smallest layout the app needs (wide enough for the elicitation tab),
+## used when it is embedded in the documentation.
+const EMBED_SIZE := Vector2i(1100, 820)
+
 const C_OK := Color("#2e6b3a")
 const C_BAD := Color("#c0392b")
 const C_NOTE := Color("#b9770e")
@@ -31,7 +36,12 @@ var current: Control
 
 func _ready() -> void:
 	assert(catalog != null, "Main needs a CaseStudyCatalog")
+	add_symbol_font()
 	options = start_options()
+	if options.get("embed", false):
+		# a docs column is narrower than a desktop window: lay out for a
+		# smaller screen so the text is not scaled down as much
+		get_window().content_scale_size = EMBED_SIZE
 	back_button.pressed.connect(open_gallery)
 	offline_button.pressed.connect(use_precomputed_fits)
 	if wants_precomputed(options, OS.has_feature("web")):
@@ -51,6 +61,18 @@ func _ready() -> void:
 
 
 ## Precomputed fits when asked for, and on the web unless a server is named.
+## The default font lacks arrows, ●, ✓ and a few more symbols. On the
+## desktop the system's fonts fill in; the web build has no system fonts, so
+## the app brings a small symbol font as a fallback.
+static func add_symbol_font() -> void:
+	var font := ThemeDB.fallback_font
+	if font == null or SYMBOL_FONT in font.fallbacks:
+		return
+	var fallbacks: Array[Font] = font.fallbacks.duplicate()
+	fallbacks.append(SYMBOL_FONT)
+	font.fallbacks = fallbacks
+
+
 static func wants_precomputed(opts: Dictionary, on_web: bool) -> bool:
 	if opts.get("backend", "") == "precomputed":
 		return true

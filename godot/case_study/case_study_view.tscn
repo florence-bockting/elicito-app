@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" path="res://case_study/personas_page.tscn" id="2_personas"]
 [ext_resource type="PackedScene" path="res://elicitation/elicitation_page.tscn" id="3_elicitation"]
 [ext_resource type="PackedScene" path="res://fit/fit_view.tscn" id="4_fit"]
+[ext_resource type="PackedScene" path="res://elicitation/expert_panel_page.tscn" id="5_panel"]
+[ext_resource type="PackedScene" path="res://case_study/next_steps_page.tscn" id="6_next"]
 
 [node name="CaseStudyView" type="TabContainer"]
 anchors_preset = 15
@@ -15,15 +17,31 @@ size_flags_vertical = 3
 current_tab = 0
 script = ExtResource("1_view")
 
-[node name="ModelText" type="RichTextLabel" parent="."]
+[node name="ModelPage" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 10
+metadata/_tab_index = 0
+
+[node name="ModelText" type="RichTextLabel" parent="ModelPage"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
 theme_override_font_sizes/normal_font_size = 15
 theme_override_font_sizes/bold_font_size = 15
 bbcode_enabled = true
 selection_enabled = true
-metadata/_tab_index = 0
+
+[node name="NextRow" type="HBoxContainer" parent="ModelPage"]
+layout_mode = 2
+alignment = 2
+
+[node name="NextButton" type="Button" parent="ModelPage/NextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Next →"
 
 [node name="PersonasPage" parent="." instance=ExtResource("2_personas")]
 unique_name_in_owner = true
@@ -43,3 +61,15 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
+
+[node name="ExpertPanelPage" parent="." instance=ExtResource("5_panel")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="NextStepsPage" parent="." instance=ExtResource("6_next")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 5

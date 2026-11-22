@@ -37,6 +37,14 @@ func test_predictions_scene_extends_predictions_view() -> void:
 		assert_is(view, PredictionsView, c.id)
 
 
+func test_personas_tab_shows_the_case_study_intro() -> void:
+	var bart := catalog.find("bart")
+	var page: PersonasPage = add_child_autofree(load("res://case_study/personas_page.tscn").instantiate())
+	page.setup(bart)
+	assert_eq(page.get_node("%PersonasIntro").text, bart.personas_intro)
+	assert_string_contains(bart.personas_intro, "three training personas")
+
+
 func test_parameter_labels_name_symbols() -> void:
 	var bart := catalog.find("bart")
 	assert_eq(bart.parameter_symbol("gammap"), "γ⁺")

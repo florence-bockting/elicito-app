@@ -7,7 +7,8 @@ Pick a case study from the gallery, answer a few questions about what you
 expect to see (as yourself or as a training persona), and elicito turns the
 answers into a prior distribution. The app then shows whether the fit
 converged, the learned prior, and what that prior implies, for one expert or
-for a panel of experts.
+for a panel of experts, and how to use the prior to fit the posterior with
+PyMC or brms.
 
 | Gallery | Elicitation | Predictions |
 |---|---|---|
@@ -19,8 +20,9 @@ a small Python server that uses elicito.
 ## Run it
 
 ```bash
-pip install ./server       # Python 3.11 to 3.13; installs elicito
-elicito-app-server         # leave it running
+python -m venv .venv && source .venv/bin/activate
+pip install -e ./server    # Python 3.11 to 3.13; installs elicito
+elicito-app-server         # leave it running (or: python -m elicito_app_server)
 ```
 
 Then open `godot/project.godot` in Godot 4.7 and press **F5** (or run an
@@ -39,9 +41,37 @@ build, e.g. `index.html?case=bart&embed=1`):
 | Option | Meaning |
 |---|---|
 | `case=<id>` | open this case study directly instead of the gallery |
-| `embed=1` | no way back to the gallery, for embedding in a documentation page |
+| `embed=1` | no way back to the gallery, and a layout for a narrower page (embedding in the docs) |
 | `server=<url>` | the elicito server, default `ws://127.0.0.1:8765/ws` |
 | `backend=precomputed` | no server: fits made in advance (the default on the web) |
+
+## Web version
+
+The workflow `.github/workflows/pages.yml` exports the web build
+(`godot/export_presets.cfg`, preset "Web": single-threaded, so GitHub Pages
+needs no special headers) and publishes it at
+<https://florence-bockting.github.io/elicito-app/>. Set **Settings > Pages >
+Source** to **GitHub Actions** once. The build is about 12 MB to download
+(gzip), mostly the engine.
+
+To build it yourself, install the Godot 4.7 export templates (Editor >
+Manage Export Templates) and run
+
+```bash
+godot --headless --path godot --export-release "Web" ../build/web/index.html
+python -m http.server -d build/web 8000    # then open http://localhost:8000
+```
+
+The BART page of the elicito documentation embeds it:
+
+```html
+<iframe src="https://florence-bockting.github.io/elicito-app/?case=bart&embed=1"
+  width="100%" height="820" loading="lazy" allow="fullscreen; clipboard-write"></iframe>
+```
+
+The web build has no system fonts, so the app brings two small font files in
+`godot/theme/fonts/` (subsets of DejaVu, see its licence there): symbols the
+default font lacks, and a monospaced font for code.
 
 ## Repository layout
 
@@ -51,7 +81,7 @@ godot/                     the app (Godot project)
   gallery/                 the start screen
   case_study/              CaseStudy, ExpertPersona and TargetSpec resources;
                            the tabs of one case study and how they are wired
-  elicitation/             chips, personas, expert panel, fit progress
+  elicitation/             chips, practice round, expert panel, fit progress
   fit/                     Fitted model: Diagnostics, Priors, Predictions
   net/                     ElicitoClient (WebSocket to the server)
   common/                  small shared widgets and the session log
@@ -88,9 +118,13 @@ ElicitationPage --request--> ElicitoClient --WebSocket--> elicito-app-server
        |                           |                         (elicito)
        |<------ progress, result --+
        |
-       +-- fit_finished --> CaseStudyView --show_single/show_panel--> FitView
-                                                          |
-                                     case study's PredictionsView (e.g. balloons)
+       +-- fit_finished --> CaseStudyView --show_single--> FitView
+                                  |                        |
+                                  |      case study's PredictionsView (e.g. balloons)
+                                  +--set_source--> NextStepsPage (PyMC / brms code)
+
+ExpertPanelPage (the personas as a panel) fits and shows its results itself,
+and reports them to CaseStudyView the same way.
 ```
 
 ## Add a case study
@@ -106,6 +140,9 @@ ElicitationPage --request--> ElicitoClient --WebSocket--> elicito-app-server
    - personas: a subclass of `ExpertPersona` that implements `simulate()` and
      `traits()`, and one `.tres` per persona;
    - a Predictions scene whose root extends `PredictionsView`;
+   - optional, for the "Where to go next" tab: override `posterior_code()`,
+     `posterior_languages()` and `placeholder_priors()` (see
+     `bart_case_study.gd`);
    - `model.png` (see `godot/tools/latex/render_model.sh`) and `thumbnail.png`.
 3. Add the `.tres` to `godot/case_studies/catalog.tres`. The tests in
    `tests/unit/test_case_studies.gd` check every case study in the catalog.
@@ -121,6 +158,7 @@ study, its personas or elicito change (the test
 ```bash
 godot --headless --path godot -s res://tools/export_scenarios.gd   # the answers to fit
 python server/tools/precompute.py                                  # real elicito, ~5 min
+python server/tools/precompute.py --independent-only               # only the panels without pooling
 ```
 
 Besides the visible personas, `CaseStudy.precompute_personas` lists hidden

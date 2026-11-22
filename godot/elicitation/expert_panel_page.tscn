@@ -1,0 +1,123 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://elicitation/expert_panel_page.gd" id="1_page"]
+[ext_resource type="PackedScene" path="res://elicitation/fit_progress.tscn" id="2_progress"]
+[ext_resource type="PackedScene" path="res://fit/fit_view.tscn" id="3_fit"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_pool"]
+
+[node name="ExpertPanelPage" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+script = ExtResource("1_page")
+
+[node name="PanelScroll" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="PanelScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 12
+
+[node name="Left" type="VBoxContainer" parent="PanelScroll/Margin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="PanelIntro" type="RichTextLabel" parent="PanelScroll/Margin/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+fit_content = true
+
+[node name="Experts" type="VBoxContainer" parent="PanelScroll/Margin/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ResultsTitle" type="Label" parent="PanelScroll/Margin/Left"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_font_sizes/font_size = 18
+text = "Results of the panel fit"
+
+[node name="PanelFitView" parent="PanelScroll/Margin/Left" instance=ExtResource("3_fit")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 760)
+layout_mode = 2
+
+[node name="NextRow" type="HBoxContainer" parent="PanelScroll/Margin/Left"]
+layout_mode = 2
+alignment = 2
+
+[node name="PanelNextButton" type="Button" parent="PanelScroll/Margin/Left/NextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Next: Where to go next →"
+
+[node name="Right" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PoolingTitle" type="Label" parent="Right"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_font_sizes/font_size = 15
+text = "How should elicito combine the experts?"
+
+[node name="PartialCheck" type="CheckBox" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_pool")
+text = "Partial pooling (one joint fit)"
+
+[node name="IndependentCheck" type="CheckBox" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+button_group = SubResource("ButtonGroup_pool")
+text = "Independent (one fit per expert)"
+
+[node name="PoolingText" type="RichTextLabel" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+fit_content = true
+
+[node name="PoolingGap" type="Control" parent="Right"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="PanelFitProgress" parent="Right" instance=ExtResource("2_progress")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelHint" type="Label" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
+theme_override_font_sizes/font_size = 13
+
+[node name="PanelFitButton" type="Button" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Fit expert panel with elicito"

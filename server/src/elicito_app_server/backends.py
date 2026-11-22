@@ -188,14 +188,18 @@ class ElicitoBackend:
         replay_n: int = 24,
         on_progress: ProgressFn | None = None,
         settings: dict[str, Any] | None = None,
+        pooling: str = "partial",
     ) -> dict[str, Any]:
-        """Fit a panel with partial pooling: every hyperparameter may differ by expert"""
+        """Fit a panel. "partial": partial pooling, every hyperparameter may
+        differ by expert. "independent": one fit per expert, no pooling."""
         import elicito as el
 
         case = _case(case_id)
-        answers = validate_panel(case, experts)
         settings = validate_settings(settings)
         on_progress = on_progress or (lambda _msg: None)
+        if _check_pooling(pooling) == "independent":
+            return _independent_panel(self, case_id, experts, replay_n, on_progress, settings)
+        answers = validate_panel(case, experts)
         started = time.time()
         # with no fixed spread, elicito first runs a warm-up fit to estimate it
         warmup = 1 if settings["tau"] is None else 0
@@ -227,6 +231,73 @@ class ElicitoBackend:
             settings,
             diagnostics,
         )
+
+
+POOLINGS = ("partial", "independent")
+
+
+def _check_pooling(pooling: Any) -> str:
+    if pooling not in POOLINGS:
+        raise ValueError(f"'pooling' must be one of {list(POOLINGS)}")
+    return str(pooling)
+
+
+def _independent_panel(
+    backend: Any,
+    case_id: str,
+    experts: dict[str, Any],
+    replay_n: int,
+    on_progress: ProgressFn,
+    settings: dict[str, Any],
+) -> dict[str, Any]:
+    """No pooling: one ordinary fit per expert, one after another.
+
+    Each expert's prior is learned from their answers alone. The panel as a
+    whole is the equal-weight mixture (linear pool) of the experts' priors.
+    """
+    case = _case(case_id)
+    answers = validate_panel(case, experts)
+    started = time.time()
+    n = len(answers)
+    fits = {}
+    for i, (name, expert) in enumerate(answers.items()):
+
+        def progress(msg: dict[str, Any], i: int = i) -> None:
+            on_progress({**msg, "phase": i + 1, "phases": n})
+
+        fits[name] = backend.fit(case_id, expert, 1, progress, settings)
+    rng = np.random.default_rng(1)
+    population = {}
+    for p in case.parameters:
+        pick = rng.integers(0, n, 20_000)
+        bounds = np.array([fits[name]["priors"][p] for name in answers])[pick]
+        population[p] = rng.uniform(bounds[:, 0], bounds[:, 1])
+    # the experts' losses added up, step by step (they may differ in length)
+    histories = [f["loss_history"] for f in fits.values()]
+    steps = min(len(h) for h in histories)
+    loss_history = [float(sum(h[t] for h in histories)) for t in range(steps)]
+    return _panel_result(
+        case,
+        backend.name,
+        case_id,
+        answers,
+        {name: f["priors"] for name, f in fits.items()},
+        {},  # no shared prior without pooling
+        population,
+        {},
+        loss_history,
+        replay_n,
+        None,
+        started,
+        settings,
+        dict(
+            expert_bound_history={name: f["bound_history"] for name, f in fits.items()},
+            panel_bound_history={},
+            expert_simulated={name: f["simulated_quantiles"] for name, f in fits.items()},
+            expert_saved_eliobj={name: f.get("saved_eliobj") for name, f in fits.items()},
+        ),
+        pooling="independent",
+    )
 
 
 def _panel_diagnostics(case: Any, panel: Any, names: list[str], best: int) -> dict[str, Any]:
@@ -276,6 +347,7 @@ def _panel_result(
     started: float,
     settings: dict[str, Any],
     diagnostics: dict[str, Any],
+    pooling: str = "partial",
 ) -> dict[str, Any]:
     """The message for a fitted panel; the same for both backends"""
     seed = int(time.time()) % 100_000
@@ -293,6 +365,7 @@ def _panel_result(
     return dict(
         type="result",
         panel=True,
+        pooling=pooling,
         backend=backend,
         case_study=case_id,
         experts=list(experts),
@@ -384,12 +457,15 @@ class MockBackend:
         replay_n: int = 24,
         on_progress: ProgressFn | None = None,
         settings: dict[str, Any] | None = None,
+        pooling: str = "partial",
     ) -> dict[str, Any]:
         """Mock panel: one mock fit per expert, the population mixes them"""
         case = _case(case_id)
-        answers = validate_panel(case, experts)
         settings = validate_settings(settings)
         on_progress = on_progress or (lambda _msg: None)
+        if _check_pooling(pooling) == "independent":
+            return _independent_panel(self, case_id, experts, replay_n, on_progress, settings)
+        answers = validate_panel(case, experts)
         started = time.time()
 
         def warmup_progress(msg: dict[str, Any]) -> None:

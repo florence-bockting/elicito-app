@@ -72,13 +72,15 @@ func request_fit(case_id: String, expert: Dictionary, _replay_n := 24, _settings
 	return _play(result, false)
 
 
-func request_fit_panel(case_id: String, experts: Dictionary, _replay_n := 24, _settings := {}) -> String:
+func request_fit_panel(case_id: String, experts: Dictionary, _replay_n := 24, _settings := {}, pooling := "partial") -> String:
 	if not _can_start(case_id):
 		return ""
 	var fits: Dictionary = _fits[case_id]
+	var independent := pooling == "independent"
+	var stored_panels: Array = fits.get("independent_panels", []) if independent else fits.panels
 	# match each expert to a different stored expert who appears in the panels
 	var candidates: Array = fits.single.filter(func(s: Dictionary) -> bool:
-		return fits.panels.any(func(p: Dictionary) -> bool: return s.name in p.members))
+		return stored_panels.any(func(p: Dictionary) -> bool: return s.name in p.members))
 	var mapping := {}  # requested name -> stored name
 	var distance := 0.0
 	for requested in experts:
@@ -91,7 +93,7 @@ func request_fit_panel(case_id: String, experts: Dictionary, _replay_n := 24, _s
 		distance = maxf(distance, best.distance)
 	var members: Array = mapping.values()
 	var panel: Dictionary = {}
-	for p in fits.panels:
+	for p in stored_panels:
 		if p.members.size() == members.size() and members.all(func(m: String) -> bool: return m in p.members):
 			panel = p
 	if panel.is_empty():
@@ -104,7 +106,7 @@ func request_fit_panel(case_id: String, experts: Dictionary, _replay_n := 24, _s
 		"exact": distance < EXACT,
 		"elicito_version": fits.get("elicito_version", ""),
 	}
-	return _play(result, true)
+	return _play(result, not independent)  # independent: no warm-up to replay
 
 
 func _process(delta: float) -> void:

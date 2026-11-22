@@ -1,33 +1,33 @@
-[gd_resource type="Resource" script_class="BartCaseStudy" format=3]
+[gd_resource type="Resource" script_class="BartCaseStudy" format=3 uid="uid://b1buarjoe26o3"]
 
-[ext_resource type="Script" path="res://case_studies/bart/bart_case_study.gd" id="1_case"]
-[ext_resource type="Script" path="res://case_study/target_spec.gd" id="2_target"]
-[ext_resource type="Script" path="res://case_study/expert_persona.gd" id="3_persona"]
-[ext_resource type="Resource" path="res://case_studies/bart/personas/cautious.tres" id="4_cautious"]
+[ext_resource type="Script" uid="uid://ciyleb3jub5b2" path="res://case_studies/bart/bart_case_study.gd" id="1_case"]
+[ext_resource type="Script" uid="uid://xmm2r1a31kka" path="res://case_study/target_spec.gd" id="2_target"]
+[ext_resource type="Script" uid="uid://cyvx2xqehb8eb" path="res://case_study/expert_persona.gd" id="3_persona"]
+[ext_resource type="Resource" uid="uid://b80xgci56vsl6" path="res://case_studies/bart/personas/cautious.tres" id="4_cautious"]
 [ext_resource type="Resource" path="res://case_studies/bart/personas/realistic.tres" id="5_realistic"]
-[ext_resource type="Resource" path="res://case_studies/bart/personas/risk_taking.tres" id="6_risky"]
-[ext_resource type="PackedScene" path="res://case_studies/bart/bart_predictions.tscn" id="7_predictions"]
-[ext_resource type="Texture2D" path="res://case_studies/bart/thumbnail.png" id="8_thumb"]
+[ext_resource type="Resource" uid="uid://cjclnt6ele1xd" path="res://case_studies/bart/personas/risk_taking.tres" id="6_risky"]
+[ext_resource type="PackedScene" uid="uid://d1eu11eibxli5" path="res://case_studies/bart/bart_predictions.tscn" id="7_predictions"]
+[ext_resource type="Texture2D" uid="uid://dbonukdci7ad2" path="res://case_studies/bart/thumbnail.png" id="8_thumb"]
 [ext_resource type="Resource" path="res://case_studies/bart/precomputed/uncertain.tres" id="9_uncertain"]
 [ext_resource type="Resource" path="res://case_studies/bart/precomputed/bold.tres" id="10_bold"]
 [ext_resource type="Resource" path="res://case_studies/bart/precomputed/impulsive.tres" id="11_impulsive"]
-
-[sub_resource type="Resource" id="Resource_ircif"]
-script = ExtResource("2_target")
-name = "pumps"
-title = "Pumps in one trial"
-question = "In a single trial, how many times will the participant pump before the trial ends, either because they stop and bank the money or because the balloon pops?"
-unit = "pumps in one trial"
-axis_min = -0.5
-axis_max = 20.5
-discrete = true
 
 [sub_resource type="Resource" id="Resource_5a2fq"]
 script = ExtResource("2_target")
 name = "omega"
 title = "Planned pumps ω"
-question = "How many pumps does the participant plan to make in a trial, i.e. the target ω they aim for before chance intervenes?"
+question = "How many pumps does the participant plan to make in a trial based on their risk attitude?"
 unit = "planned pumps ω"
+
+[sub_resource type="Resource" id="Resource_ircif"]
+script = ExtResource("2_target")
+name = "pumps"
+title = "Actual pumps m"
+question = "How many times will the participant pump, either because they stop or the balloon pops? How much does a participant stick to their plan?"
+unit = "pumps in one trial"
+axis_min = -0.5
+axis_max = 20.5
+discrete = true
 
 [resource]
 script = ExtResource("1_case")
@@ -36,55 +36,36 @@ title = "Balloon Analogue Risk Task"
 summary = "How much risk do people take for money? Experts describe participants of the balloon task, and elicito turns that into priors for risk propensity and consistency."
 thumbnail = ExtResource("8_thumb")
 docs_url = "https://elicito.readthedocs.io/en/latest/case-studies/bart-risk-taking/"
-intro = "A participant inflates a virtual balloon one pump at a time. Each pump earns {reward}, but has a {burst} chance to pop the balloon and lose that trial's earnings. Before seeing any data: what do you expect a typical adult participant to do? Spread 20 chips (5% each) to show how likely each answer is."
+intro = "[b]Scenario[/b]
+A participant inflates a virtual balloon one pump at a time. Each pump earns {reward}, but also pops the balloon with a chance of {burst}. When the balloon pops, the participant loses the money earned in that trial. They can stop at any time and bank their earnings.
+
+[b]Elicitation task[/b]
+Before seeing any data, we state what we expect a participant to do in this task. To make this easier, the [color=#a8540f]Training personas[/color] tab introduced three personas (Mila, Sam and Jonas) and the two questions we use to express our expectations: the [color=#a8540f]planned pumps[/color], which depend on the participant's risk attitude, and the [color=#a8540f]actual pumps[/color], which also depend on how consistently they follow their plan. We answer both with a roulette task: you spread chips over the possible numbers of pumps to show how likely you find each one."
 model_text = "[font_size=21][b][color=#1f2a44]The case study: Balloon Analogue Risk Task (BART)[/color][/b][/font_size]
-In the BART, a participant inflates a virtual balloon one pump at a time. Every pump adds money to a temporary bank, but every pump can also pop the balloon, with probability [b]p = 0.15[/b]. A popped balloon loses that trial's money. At any point the participant can stop and cash in, so the task measures how much risk people take. We use the cognitive model of Lee and Wagenmakers (2013, [i]Bayesian Cognitive Modeling[/i]), as in elicito's BART case study.
+In the BART, a participant inflates a virtual balloon one pump at a time. Every pump adds money to a temporary bank, but every pump can also pop the balloon, with probability [color=#a8540f]p = 0.15[/color]. A popped balloon loses that trial's money. At any point the participant can stop and cash in, so the task measures how much risk people take. We use the cognitive model of Lee and Wagenmakers (2013, [i]Bayesian Cognitive Modeling[/i]), as in elicito's BART case study.
 
 [font_size=18][b][color=#1f2a44]Statistical model[/color][/b][/font_size]
 [center][img width=760]res://case_studies/bart/model.png[/img][/center]
 
 [ul]
-[b]ω is the plan:[/b] the number of pumps the participant considers best. It depends only on γ⁺.
-[b]β sets how strictly the plan is followed:[/b] well below ω they almost surely pump, past ω they almost surely stop; large β makes this switch sharp.
-[b]Chance matters:[/b] balloons often pop before people reach their plan, so the pumps in one trial are usually fewer than ω.
-[/ul]
+[color=#a8540f]ω is the plan:[/color] the number of pumps the participant considers best. It depends only on γ⁺.
+[color=#a8540f]β sets how strictly the plan is followed:[/color] well below ω they almost surely pump, past ω they almost surely stop; large β makes this switch sharp.
+[/ul]"
+personas_intro = "This tab introduces expert knowledge elicitation through three training personas which differ mainly in how much risk they take. They are introduced in the following three cards:"
+personas_text = "Each persona creates an expectation regarding their risk attitude as well as their uncertainty (plan consistency). This knowledge can be used to inform our statistical model by asking the following two questions:
 
-[font_size=18][b][color=#1f2a44]From expert knowledge to a prior[/color][/b][/font_size]
-Experts find it hard to talk about γ⁺ and β directly, so elicito asks about things they can picture (predictive elicitation):
-[ol]
-In the [b]Expert knowledge elicitation[/b] tab you place chips for two observable quantities: the number of pumps in one trial, and the planned number of pumps ω. Each chip histogram becomes five quantiles (10, 25, 50, 75 and 90%).
-elicito draws (γ⁺, β) from the current prior, simulates trials with the likelihood above, and computes the same quantiles.
-A loss measures how far the simulated quantiles are from yours, and the CMA-ES optimiser adjusts λ = (a, b, c, d) until they match.
-The [b]Fitted model[/b] tab shows the learned priors and replays trials simulated from them.
-[/ol]
-[i]Why two questions?[/i] ω depends only on γ⁺, so it pins down risk propensity. The number of pumps also depends on β and on chance. Asking about pumps alone can lead to a prior with meaningless negative γ⁺ and β."
-targets = Array[ExtResource("2_target")]([SubResource("Resource_ircif"), SubResource("Resource_5a2fq")])
-predictions_scene = ExtResource("7_predictions")
-reward_per_pump = 0.05
+[indent]• [color=#a8540f]How many times does a person plan to pump?[/color]
+[indent]This question refers to the risk attitude of a person and maps onto ω in the statistical model.[/indent]
+
+• [color=#a8540f]How many times does a person actually pump?[/color]
+[indent]This takes the uncertainty of a person into account. When a person is highly uncertain, for example, we will see larger variation than originally planned, while a person who sticks strongly to their plan will probably deviate less from the planned pumps. This information will map onto [i]m[/i] in the statistical model.[/indent][/indent]
+"
 parameter_labels = {
 "beta": "β consistency",
 "gammap": "γ⁺ risk propensity"
 }
+targets = Array[ExtResource("2_target")]([SubResource("Resource_5a2fq"), SubResource("Resource_ircif")])
 personas = Array[ExtResource("3_persona")]([ExtResource("4_cautious"), ExtResource("5_realistic"), ExtResource("6_risky")])
 precompute_personas = Array[ExtResource("3_persona")]([ExtResource("9_uncertain"), ExtResource("10_bold"), ExtResource("11_impulsive")])
+predictions_scene = ExtResource("7_predictions")
 precomputed_fits = "res://case_studies/bart/precomputed/fits.json"
-personas_text = "[font_size=18][b][color=#1f2a44]From attitude to your two answers[/color][/b][/font_size]
-The questions in the next tab are about behaviour you can picture, not about γ⁺ and β directly. This is how the two traits show up in your answers:
-
-[b]1. Risk attitude → the plan → the question \"Planned pumps ω\"[/b]
-Risk attitude is γ⁺ in the model, and it fixes the plan: ω = −γ⁺ / log(1 − p), the number of pumps a person aims for. This question asks only about the plan, so answer it with how far the person [i]wants[/i] to go: about 1–2 pumps for Mila, 2–5 for Sam, 7–12 for Jonas. Consistency and popping balloons play no role here.
-
-[b]2. Consistency and chance → the question \"Pumps in one trial\"[/b]
-What actually happens in one trial depends on three things:
-[ul]
-[b]the plan (ω):[/b] where the person aims;
-[b]consistency (β):[/b] high β means they stop right at the plan; low β scatters the stopping point on both sides, from cashing in straight away to pumping past the plan;
-[b]chance:[/b] every pump pops the balloon with probability 0.15, so the more pumps someone plans, the more often the trial ends early in a pop.
-[/ul]
-So answers to this question mostly sit [i]at or below[/i] the plan, because a pop can only end a trial early; low consistency adds spread on both sides of it. Jonas shows how strong chance is: he is very consistent, yet his pumps spread from 2 to 7, because most of his balloons pop before he reaches his plan.
-
-[b]3. What elicito learns from your answers[/b]
-Your ω answer pins down the range of γ⁺. Your pumps answer tells elicito about β, but only indirectly, because popping balloons also cut trials short. That is why β is harder to recover than γ⁺. After fitting, the [b]Fitted model[/b] tab shows how well the prior reproduces both answers.
-
-[b]Tip:[/b] answer the ω question first. Then, for the pumps question, ask yourself: how often does the balloon survive until the plan, and how strictly does this person stop there?
-"

@@ -1,0 +1,108 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://elicitation/roulette_tutorial.gd" id="1_tutorial"]
+[ext_resource type="Script" path="res://elicitation/chip_roulette.gd" id="2_roulette"]
+
+[node name="RouletteTutorial" type="VBoxContainer"]
+theme_override_constants/separation = 10
+script = ExtResource("1_tutorial")
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="StepLabel" type="Label" parent="Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_font_sizes/font_size = 16
+text = "Practice 1 of 5"
+
+[node name="SkipButton" type="Button" parent="Header"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Close the practice. You can open it again at any time."
+text = "Skip practice"
+flat = true
+
+[node name="Body" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TextColumn" type="VBoxContainer" parent="Body"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Instruction" type="RichTextLabel" parent="Body/TextColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+fit_content = true
+
+[node name="Feedback" type="RichTextLabel" parent="Body/TextColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+fit_content = true
+
+[node name="PracticeBox" type="VBoxContainer" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.3
+
+[node name="Practice" type="Control" parent="Body/PracticeBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 250)
+layout_mode = 2
+script = ExtResource("2_roulette")
+
+[node name="ClearRow" type="HBoxContainer" parent="Body/PracticeBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="ClearButton" type="Button" parent="Body/PracticeBox/ClearRow"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Take all chips off the practice diagram."
+text = "Clear"
+
+[node name="Examples" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Footer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "← Back"
+
+[node name="Spacer" type="Control" parent="Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Check my answer"
+
+[node name="NextButton" type="Button" parent="Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Next →"

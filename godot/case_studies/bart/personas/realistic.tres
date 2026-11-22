@@ -9,8 +9,8 @@ display_name = "Realistic expert"
 briefing = "You have watched hundreds of ordinary adults like Sam do this task. They plan about two to five pumps, most often three or four, and they follow that plan only loosely. Because some balloons pop before people reach their plan (about three in ten), a single trial usually ends after one to three pumps."
 character_name = "Sam"
 tagline = "An ordinary participant: some risk, some noise"
-profile = "[b]Risk attitude: medium.[/b] Sam plans two to five pumps, most often three or four.
-[b]Consistency: medium.[/b] He roughly follows his plan, but not exactly: when the balloon survives, he stops within one pump of his plan in about four out of ten trials."
+profile = "[color=#a8540f]Risk attitude: medium.[/color] Sam plans two to five pumps, most often three or four.
+[color=#a8540f]Consistency: medium.[/color] He roughly follows his plan, but not exactly: when the balloon survives, he stops within one pump of his plan in about four out of ten trials."
 portrait = ExtResource("1_31qwd")
 gammap_low = 0.3
 gammap_high = 0.8

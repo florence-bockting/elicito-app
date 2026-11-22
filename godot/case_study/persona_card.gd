@@ -1,7 +1,7 @@
 class_name PersonaCard
 extends PanelContainer
-## One training persona: portrait, the participant they know, one meter
-## per trait and a "Play as" button.
+## One training persona: portrait, name, tagline, one meter
+## per trait and a "Learn a prior based on …" button.
 
 signal play_requested(persona: ExpertPersona)
 
@@ -9,7 +9,6 @@ var persona: ExpertPersona
 
 @onready var _portrait: TextureRect = %Portrait
 @onready var _name: Label = %CharacterName
-@onready var _role: Label = %Role
 @onready var _tagline: Label = %Tagline
 @onready var _meters: GridContainer = %Meters
 @onready var _profile: RichTextLabel = %Profile
@@ -32,10 +31,9 @@ func setup(p: ExpertPersona) -> void:
 func _show() -> void:
 	_portrait.texture = persona.portrait
 	_name.text = persona.character_name
-	_role.text = "known by the %s" % persona.display_name.to_lower()
 	_tagline.text = persona.tagline
 	_profile.text = persona.profile
-	_play_button.text = "Play as the %s" % persona.display_name.to_lower()
+	_play_button.text = "Learn a prior based on %s" % persona.character_name
 	for child in _meters.get_children():
 		child.queue_free()
 	for t in persona.traits():

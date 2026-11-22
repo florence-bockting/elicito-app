@@ -5,7 +5,7 @@ extends SceneTree
 ##
 ##   godot --headless --path godot -s res://tools/export_scenarios.gd
 ##
-## The answers are exactly what "Fill in the persona's answer" places, so a
+## The answers are exactly what "Fill in example expectations" places, so a
 ## user who plays a persona gets the fit of that very answer. Panels: every
 ## combination of two or more of the visible personas.
 

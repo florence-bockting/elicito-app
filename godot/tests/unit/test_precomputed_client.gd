@@ -17,6 +17,9 @@ func before_each() -> void:
 	high_result["priors"] = {"gammap": [1.0, 2.0], "beta": [2.0, 4.0]}
 	var panel := TestFixtures.panel_result(["Low expert", "High expert"])
 	panel["answers"] = {"Low expert": LOW, "High expert": HIGH}
+	var independent := TestFixtures.panel_result(["Low expert", "High expert"])
+	independent["pooling"] = "independent"
+	independent["panel_priors"] = {}
 	client.add_fits(bart, {
 		"elicito_version": "0.9.0",
 		"single": [
@@ -24,6 +27,7 @@ func before_each() -> void:
 			{"name": "High expert", "answers": HIGH, "result": high_result},
 		],
 		"panels": [{"members": ["Low expert", "High expert"], "result": panel}],
+		"independent_panels": [{"members": ["Low expert", "High expert"], "result": independent}],
 	})
 
 
@@ -68,6 +72,17 @@ func test_panel_experts_keep_their_names() -> void:
 	# the warm-up came first, then the training with its loss
 	var first: Array = get_signal_parameters(client, "progress", 0)
 	assert_eq(first[0], "Warm-up")
+
+
+func test_independent_panel_uses_its_own_stored_fit() -> void:
+	watch_signals(client)
+	client.request_fit_panel("bart", {"Ana": HIGH, "Ben": LOW}, 24, {}, "independent")
+	await wait_for_signal(client.fit_finished, 5.0)
+	var result: Dictionary = get_signal_parameters(client, "fit_finished")[0]
+	assert_eq(result.pooling, "independent")
+	assert_eq(result.expert_priors.keys(), ["Ana", "Ben"])
+	var first: Array = get_signal_parameters(client, "progress", 0)
+	assert_ne(first[0], "Warm-up", "no warm-up without pooling")
 
 
 func test_too_many_experts_fail_politely() -> void:

@@ -27,3 +27,9 @@ func _send(msg: Dictionary) -> void:
 func answer(result: Dictionary) -> void:
 	_pending_id = ""
 	fit_finished.emit(result)
+
+
+## Fails the pending request as the server would.
+func fail(message: String) -> void:
+	_pending_id = ""
+	fit_failed.emit(message)

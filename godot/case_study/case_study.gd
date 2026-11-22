@@ -18,11 +18,15 @@ extends Resource
 @export var docs_url: String = ""
 
 @export_group("Texts")
-## Shown at the top of the elicitation tab; see intro_text().
+## BBCode shown at the top of the elicitation tab: the scenario and the
+## task. See intro_text().
 @export_multiline var intro: String = ""
 ## BBCode for the "Statistical model" tab: the task, likelihood,
 ## parameters and prior specification.
 @export_multiline var model_text: String = ""
+## Plain text for the "Training personas" tab, above the persona cards
+## (empty = a general sentence).
+@export_multiline var personas_intro: String = ""
 ## BBCode for the "Training personas" tab, below the persona cards.
 @export_multiline var personas_text: String = ""
 ## Display names for the server's parameter keys, e.g. {"gammap": "γ⁺ risk propensity"}.
@@ -60,8 +64,8 @@ func target(target_name: String) -> TargetSpec:
 	return null
 
 
-## A persona's suggested chips per target, as "Fill in the persona's
-## answer" places them.
+## A persona's suggested chips per target, as "Fill in example
+## expectations" places them.
 func persona_chips(p: ExpertPersona) -> Dictionary:
 	var chips := {}
 	var samples := p.simulate(4000)
@@ -80,6 +84,23 @@ func persona_answers(p: ExpertPersona) -> Dictionary:
 		if chips.has(spec.name):
 			out[spec.name] = Array(QuantileMath.quantiles_from_histogram(chips[spec.name], spec.bin_edges(), spec.probs))
 	return out
+
+
+## Code that fits this model's posterior with the learned `priors`
+## ({parameter: [lower, upper]}) in `language`, one of posterior_languages().
+## `source` says where the priors come from. Empty: no "Where to go next".
+func posterior_code(_language: String, _priors: Dictionary, _source: String) -> String:
+	return ""
+
+
+## The languages posterior_code() supports, as {id: tab title}.
+func posterior_languages() -> Dictionary:
+	return {}
+
+
+## Priors to show before anything is fitted, as {parameter: [lower, upper]}.
+func placeholder_priors() -> Dictionary:
+	return {}
 
 
 ## "γ⁺" from "γ⁺ risk propensity": the label's first word.

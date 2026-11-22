@@ -2,7 +2,52 @@
 
 [ext_resource type="Script" path="res://elicitation/elicitation_page.gd" id="1_page"]
 [ext_resource type="PackedScene" path="res://elicitation/fit_progress.tscn" id="2_progress"]
-[ext_resource type="PackedScene" path="res://elicitation/expert_panel_box.tscn" id="3_panel_box"]
+[ext_resource type="PackedScene" path="res://elicitation/roulette_tutorial.tscn" id="4_tutorial"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_fold"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(1, 0.9529412, 0.8392157, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8862745, 0.8627451, 0.8117647, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_fold_hover"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.9490196, 0.72156864, 0.29411766, 0.45)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8862745, 0.8627451, 0.8117647, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_fold_panel"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.99215686, 0.972549, 1)
+border_width_left = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8862745, 0.8627451, 0.8117647, 1)
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="ElicitationPage" type="HBoxContainer"]
 anchors_preset = 15
@@ -14,82 +59,91 @@ script = ExtResource("1_page")
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="Left" type="VBoxContainer" parent="."]
+[node name="LeftScroll" type="ScrollContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
+horizontal_scroll_mode = 0
 
-[node name="Intro" type="Label" parent="Left"]
-unique_name_in_owner = true
+[node name="LeftMargin" type="MarginContainer" parent="LeftScroll"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.23, 0.23, 0.23, 1)
-autowrap_mode = 3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 12
 
-[node name="StepsText" type="RichTextLabel" parent="Left"]
+[node name="Left" type="VBoxContainer" parent="LeftScroll/LeftMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="TextBox" type="VBoxContainer" parent="LeftScroll/LeftMargin/Left"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Intro" type="RichTextLabel" parent="LeftScroll/LeftMargin/Left/TextBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
-theme_override_font_sizes/normal_font_size = 14
-theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
 bbcode_enabled = true
 fit_content = true
 
-[node name="PersonaBar" type="HBoxContainer" parent="Left"]
+[node name="RouletteHelp" type="FoldableContainer" parent="LeftScroll/LeftMargin/Left/TextBox"]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_colors/hover_font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_colors/collapsed_font_color = Color(0.12156863, 0.16470589, 0.26666668, 1)
+theme_override_styles/title_panel = SubResource("StyleBox_fold")
+theme_override_styles/title_hover_panel = SubResource("StyleBox_fold_hover")
+theme_override_styles/title_collapsed_panel = SubResource("StyleBox_fold")
+theme_override_styles/title_collapsed_hover_panel = SubResource("StyleBox_fold_hover")
+theme_override_styles/panel = SubResource("StyleBox_fold_panel")
+title = "Practice the roulette task (about 2 minutes)"
 
-[node name="PlayAsLabel" type="Label" parent="Left/PersonaBar"]
-layout_mode = 2
-text = "Play as:"
-
-[node name="PersonaPicker" type="OptionButton" parent="Left/PersonaBar"]
+[node name="RouletteTutorial" parent="LeftScroll/LeftMargin/Left/TextBox/RouletteHelp" instance=ExtResource("4_tutorial")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ShowMeToggle" type="CheckButton" parent="Left/PersonaBar"]
+[node name="StepsText" type="RichTextLabel" parent="LeftScroll/LeftMargin/Left/TextBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Show me the persona's answer"
+theme_override_colors/default_color = Color(0.23, 0.23, 0.23, 1)
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+fit_content = true
 
-[node name="AutofillButton" type="Button" parent="Left/PersonaBar"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-tooltip_text = "Places the persona's suggested chips on both questions. You can still move them afterwards."
-text = "Fill in the persona's answer"
-
-[node name="MultiRow" type="HBoxContainer" parent="Left"]
+[node name="PersonaBar" type="HBoxContainer" parent="LeftScroll/LeftMargin/Left"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MultiCheck" type="CheckBox" parent="Left/MultiRow"]
+[node name="PlayAsLabel" type="Label" parent="LeftScroll/LeftMargin/Left/PersonaBar"]
+layout_mode = 2
+text = "Persona:"
+
+[node name="PersonaPicker" type="OptionButton" parent="LeftScroll/LeftMargin/Left/PersonaBar"]
 unique_name_in_owner = true
 layout_mode = 2
-tooltip_text = "Collect the answers of several experts, one after another, and fit them together."
-text = "Multiple experts"
 
-[node name="ExpertName" type="LineEdit" parent="Left/MultiRow"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-placeholder_text = "Expert name"
-
-[node name="AddExpertButton" type="Button" parent="Left/MultiRow"]
+[node name="AutofillButton" type="Button" parent="LeftScroll/LeftMargin/Left/PersonaBar"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-disabled = true
-text = "Add to expert panel"
+tooltip_text = "Places example chips that match this persona's expectations on every question. You can still move them afterwards."
+text = "Fill in example expectations"
 
-[node name="BriefingCard" type="PanelContainer" parent="Left"]
+[node name="BriefingCard" type="PanelContainer" parent="LeftScroll/LeftMargin/Left"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="BriefingRow" type="HBoxContainer" parent="Left/BriefingCard"]
+[node name="BriefingRow" type="HBoxContainer" parent="LeftScroll/LeftMargin/Left/BriefingCard"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="BriefingPortrait" type="TextureRect" parent="Left/BriefingCard/BriefingRow"]
+[node name="BriefingPortrait" type="TextureRect" parent="LeftScroll/LeftMargin/Left/BriefingCard/BriefingRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
@@ -97,23 +151,24 @@ size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BriefingText" type="RichTextLabel" parent="Left/BriefingCard/BriefingRow"]
+[node name="BriefingText" type="RichTextLabel" parent="LeftScroll/LeftMargin/Left/BriefingCard/BriefingRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = true
 
-[node name="Tabs" type="TabContainer" parent="Left"]
+[node name="Questions" type="HBoxContainer" parent="LeftScroll/LeftMargin/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 16
 
-[node name="Buttons" type="HBoxContainer" parent="Left"]
+[node name="Buttons" type="HBoxContainer" parent="LeftScroll/LeftMargin/Left"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Hint" type="Label" parent="Left/Buttons"]
+[node name="Hint" type="Label" parent="LeftScroll/LeftMargin/Left/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -121,20 +176,15 @@ theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
 theme_override_font_sizes/font_size = 14
 autowrap_mode = 3
 
-[node name="ResetButton" type="Button" parent="Left/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Clear this question"
-
-[node name="FitButton" type="Button" parent="Left/Buttons"]
+[node name="NextButton" type="Button" parent="LeftScroll/LeftMargin/Left/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 disabled = true
-text = "Fit prior with elicito"
+text = "Next: Inspect prior →"
 
 [node name="Right" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(340, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -146,11 +196,6 @@ text = "Training settings"
 
 [node name="FitProgress" parent="Right" instance=ExtResource("2_progress")]
 unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ExpertPanelBox" parent="Right" instance=ExtResource("3_panel_box")]
-unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="SessionButtons" type="HBoxContainer" parent="Right"]
@@ -165,6 +210,13 @@ text = "Save session log"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Open folder"
+
+[node name="FitButton" type="Button" parent="Right"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+disabled = true
+text = "Fit prior with elicito"
 
 [node name="SavedLabel" type="Label" parent="Right"]
 unique_name_in_owner = true

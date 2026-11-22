@@ -100,3 +100,34 @@ def test_settings_reach_the_result(mock_client):
         while msg["type"] in ("progress", "heartbeat"):
             msg = ws.receive_json()
         assert msg["type"] == "error" and "epochs" in msg["message"]
+
+
+def test_websocket_independent_panel(mock_client):
+    experts = {n: expert_answers(g, b, n=2000) for n, (g, b) in PERSONAS.items()}
+    with mock_client.websocket_connect("/ws") as ws:
+        ws.receive_json()
+        ws.send_json({"type": "fit_panel", "request_id": "p2", "case_study": "bart",
+                      "experts": experts, "replay_n": 10, "pooling": "independent"})
+        msg = ws.receive_json()
+        phases = set()
+        while msg["type"] in ("progress", "heartbeat"):
+            if msg["type"] == "progress":
+                phases.add((msg["phase"], msg["phases"]))
+            msg = ws.receive_json()
+    assert msg["type"] == "result" and msg["panel"] is True, msg
+    assert msg["pooling"] == "independent"
+    assert phases == {(1, 3), (2, 3), (3, 3)}, "one step per expert"
+    assert msg["panel_priors"] == {} and msg["tau"] == {}
+    assert set(msg["expert_priors"]) == set(PERSONAS)
+
+
+def test_unknown_pooling_is_an_error(mock_client):
+    experts = {n: expert_answers(g, b, n=500) for n, (g, b) in PERSONAS.items()}
+    with mock_client.websocket_connect("/ws") as ws:
+        ws.receive_json()
+        ws.send_json({"type": "fit_panel", "request_id": "p3", "case_study": "bart",
+                      "experts": experts, "pooling": "complete"})
+        msg = ws.receive_json()
+        while msg["type"] in ("progress", "heartbeat"):
+            msg = ws.receive_json()
+    assert msg["type"] == "error" and "pooling" in msg["message"]

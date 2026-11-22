@@ -1,5 +1,6 @@
 extends SceneTree
-## Screenshots of the gallery, a single fit and a panel fit, for the README
+## Screenshots of the gallery, a single fit, the expert panel and the
+## posterior code, for the README
 ## and the documentation. Needs a running server (elicito-app-server):
 ##   godot --path godot --resolution 1280x1000 -s res://tools/screenshots.gd -- --out=/tmp/shots
 var out := "/tmp/elicito-app-screenshots"
@@ -33,6 +34,9 @@ func _run() -> void:
 	page.fit_button.pressed.emit()
 	await main.client.fit_finished
 	await create_timer(0.5).timeout
+	await _shot("4b_fitted.png")
+	page.next_button.pressed.emit()
+	await create_timer(0.3).timeout
 	await _shot("5_diagnostics.png")
 	view.fit_view.current_tab = 1
 	await create_timer(0.3).timeout
@@ -40,20 +44,23 @@ func _run() -> void:
 	view.fit_view.current_tab = 2
 	await create_timer(5.0).timeout
 	await _shot("7_predictions.png")
-	view.show_page(page)
-	page.multi_check.button_pressed = true
-	for i in [0, 2]:
-		page.play_as(main.catalog.case_studies[0].personas[i])
-		page.autofill_button.pressed.emit()
-		page.add_expert_button.pressed.emit()
+	var panel_page := view.panel_page
+	view.show_page(panel_page)
+	await create_timer(0.3).timeout
 	await _shot("8_panel_ready.png")
-	page.fit_button.pressed.emit()
+	panel_page.fit_button.pressed.emit()
 	await main.client.fit_finished
-	await create_timer(0.5).timeout
-	await _shot("9_panel_diagnostics.png")
-	view.fit_view.current_tab = 2
+	await create_timer(0.8).timeout
+	await _shot("9_panel_results.png")
+	panel_page.results.current_tab = 2
 	await create_timer(5.0).timeout
 	await _shot("10_panel_predictions.png")
+	panel_page.next_button.pressed.emit()
+	await create_timer(0.3).timeout
+	await _shot("11_next_steps.png")
+	view.next_steps.code_tabs.current_tab = 1
+	await create_timer(0.3).timeout
+	await _shot("12_next_steps_brms.png")
 	quit(0)
 func _shot(file: String) -> void:
 	await RenderingServer.frame_post_draw

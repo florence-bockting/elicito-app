@@ -8,6 +8,8 @@ const C_OK := Color("#2e6b3a")
 const C_BAD := Color("#c0392b")
 const C_MUTED := Color("#6b6b6b")
 
+var _phase := 0  # phase of the last training update
+
 @onready var status_label: Label = %FitStatus
 @onready var progress_bar: ProgressBar = %Progress
 @onready var loss_plot: LossPlot = %LossPlot
@@ -20,6 +22,7 @@ func set_status(text: String, color := C_MUTED) -> void:
 
 ## A new fit: empty bar, no loss until the real training starts.
 func start(message: String) -> void:
+	_phase = 0
 	loss_plot.clear()
 	loss_plot.visible = false
 	progress_bar.value = 0
@@ -31,6 +34,9 @@ func on_progress(stage: String, done: int, total: int, loss: Variant, phase: int
 	progress_bar.value = 100.0 * (phase - 1 + frac) / maxi(phases, 1)
 	var step := "Step %d of %d · " % [phase, phases] if phases > 1 else ""
 	if stage == "Training":
+		if phase != _phase:  # a new training run, e.g. the next expert of an independent panel
+			loss_plot.clear()
+		_phase = phase
 		set_status("%sTraining the prior… %d / %d simulations" % [step, done, total])
 		if loss != null:
 			loss_plot.visible = true

@@ -13,7 +13,7 @@ signal fit_finished(result: Dictionary)
 signal fit_failed(message: String)
 
 ## The server protocol this client needs (see PROTOCOL_VERSION in server/src/elicito_app_server/app.py).
-const REQUIRED_SERVER_VERSION := 4
+const REQUIRED_SERVER_VERSION := 5
 
 @export var url := "ws://127.0.0.1:8765/ws"
 ## Connect as soon as the node is ready (Main connects itself, after
@@ -81,9 +81,11 @@ func request_fit(case_id: String, expert: Dictionary, replay_n := 24, settings :
 	return _pending_id
 
 
-## Fit a panel of experts with partial pooling. `experts` maps each
-## expert's name to their answers (like `expert` in request_fit).
-func request_fit_panel(case_id: String, experts: Dictionary, replay_n := 24, settings := {}) -> String:
+## Fit a panel of experts. `experts` maps each expert's name to their
+## answers (like `expert` in request_fit). `pooling`: "partial" (one joint
+## fit, the experts share a common part) or "independent" (one fit per
+## expert, no pooling).
+func request_fit_panel(case_id: String, experts: Dictionary, replay_n := 24, settings := {}, pooling := "partial") -> String:
 	if not connected:
 		fit_failed.emit("Not connected to the elicito server at %s" % url)
 		return ""
@@ -93,7 +95,7 @@ func request_fit_panel(case_id: String, experts: Dictionary, replay_n := 24, set
 	if _refuse_if_outdated():
 		return ""
 	_pending_id = "panel-%d" % Time.get_ticks_msec()
-	_send({"type": "fit_panel", "request_id": _pending_id, "case_study": case_id, "experts": experts, "replay_n": replay_n, "settings": settings})
+	_send({"type": "fit_panel", "request_id": _pending_id, "case_study": case_id, "experts": experts, "replay_n": replay_n, "settings": settings, "pooling": pooling})
 	return _pending_id
 
 

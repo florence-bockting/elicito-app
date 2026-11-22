@@ -1,38 +1,31 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://6wy6a85gqx7f"]
 
-[ext_resource type="Script" path="res://case_study/persona_card.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://yn51u8occfrg" path="res://case_study/persona_card.gd" id="1_card"]
 
-[node name="PersonaCard" type="PanelContainer"]
+[node name="PersonaCard" type="PanelContainer" unique_id=320142636]
 custom_minimum_size = Vector2(240, 0)
 size_flags_horizontal = 3
 script = ExtResource("1_card")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="." unique_id=714384501]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Portrait" type="TextureRect" parent="VBox"]
+[node name="Portrait" type="TextureRect" parent="VBox" unique_id=363315626]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CharacterName" type="Label" parent="VBox"]
+[node name="CharacterName" type="Label" parent="VBox" unique_id=1488551224]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 
-[node name="Role" type="Label" parent="VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.42, 0.42, 1)
-theme_override_font_sizes/font_size = 13
-horizontal_alignment = 1
-
-[node name="Tagline" type="Label" parent="VBox"]
+[node name="Tagline" type="Label" parent="VBox" unique_id=1402030054]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.16, 0.27, 1)
@@ -40,14 +33,14 @@ theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Meters" type="GridContainer" parent="VBox"]
+[node name="Meters" type="GridContainer" parent="VBox" unique_id=483685344]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 4
 columns = 3
 
-[node name="Profile" type="RichTextLabel" parent="VBox"]
+[node name="Profile" type="RichTextLabel" parent="VBox" unique_id=1293114204]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -57,9 +50,9 @@ theme_override_font_sizes/bold_font_size = 14
 bbcode_enabled = true
 fit_content = true
 
-[node name="PlayButton" type="Button" parent="VBox"]
+[node name="PlayButton" type="Button" parent="VBox" unique_id=1892764928]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"PrimaryButton"
-text = "Play as"
+text = "Learn a prior"

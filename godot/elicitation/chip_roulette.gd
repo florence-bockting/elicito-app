@@ -5,13 +5,15 @@ extends Control
 ## The expert spreads a fixed number of probability chips over bins:
 ## left click drops a chip into a column, right click takes one back.
 ## The widget shows the running CDF, a box plot of the expert's quantiles,
-## and, after a fit, the quantiles that the fitted prior implies.
+## and (with `show_prior`), after a fit, the quantiles that the fitted
+## prior implies.
 
 signal histogram_changed(counts: PackedInt32Array)
 
 const PAD_L := 46.0
 const PAD_R := 18.0
 const PAD_T := 66.0  # room for the two box-plot rows
+const PAD_T_ONE_ROW := 40.0  # only the expert's box plot
 const PAD_B := 36.0
 const DROP_TIME := 0.28
 
@@ -29,6 +31,13 @@ const NOTICE_TIME := 2.5  # seconds a notice stays visible
 
 @export var spec: TargetSpec:
 	set = set_spec
+## Label in front of the expert's box plot (empty: none).
+@export var box_label := ""
+## Draw the fitted prior's box plot (red) under the expert's.
+@export var show_prior := true:
+	set(value):
+		show_prior = value
+		queue_redraw()
 
 var counts := PackedInt32Array()
 var model_quantiles := PackedFloat64Array()
@@ -176,7 +185,7 @@ func _notification(what: int) -> void:
 
 func _bin_at(pos: Vector2) -> int:
 	var plot := _plot_rect()
-	if pos.x < plot.position.x or pos.x >= plot.end.x or pos.y < PAD_T * 0.5 or pos.y > plot.end.y:
+	if pos.x < plot.position.x or pos.x >= plot.end.x or pos.y < _pad_top() * 0.5 or pos.y > plot.end.y:
 		return -1
 	return clampi(int((pos.x - plot.position.x) / _col_width()), 0, counts.size() - 1)
 
@@ -200,8 +209,13 @@ func _animate_drop(bin: int, level: int) -> void:
 
 # ---------------------------------------------------------------- geometry
 
+func _pad_top() -> float:
+	return PAD_T if show_prior else PAD_T_ONE_ROW
+
+
 func _plot_rect() -> Rect2:
-	return Rect2(PAD_L, PAD_T, maxf(size.x - PAD_L - PAD_R, 10.0), maxf(size.y - PAD_T - PAD_B, 10.0))
+	var top := _pad_top()
+	return Rect2(PAD_L, top, maxf(size.x - PAD_L - PAD_R, 10.0), maxf(size.y - top - PAD_B, 10.0))
 
 
 func _col_width() -> float:
@@ -298,8 +312,9 @@ func _draw() -> void:
 	# box plots: the expert's answers and what the fitted prior implies
 	var row_you := 20.0
 	var row_fit := 46.0
-	draw_string(font, Vector2(4, row_you + fs * 0.35), "you", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, C_EXPERT)
-	draw_string(font, Vector2(4, row_fit + fs * 0.35), "prior", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, C_MODEL)
+	draw_string(font, Vector2(4, row_you + fs * 0.35), box_label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, C_EXPERT)
+	if show_prior:
+		draw_string(font, Vector2(4, row_fit + fs * 0.35), "prior", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, C_MODEL)
 	if is_complete():
 		var q := quantiles()
 		for v in q:
@@ -308,7 +323,9 @@ func _draw() -> void:
 	else:
 		var msg := "%d of %d chips left" % [chips_left(), spec.chips]
 		draw_string(font, Vector2(plot.position.x, row_you + fs * 0.35), msg, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(C_EXPERT, 0.6))
-	if model_quantiles.size() >= 3:
+	if not show_prior:
+		pass
+	elif model_quantiles.size() >= 3:
 		_draw_box(model_quantiles, row_fit, C_MODEL)
 	else:
 		draw_string(font, Vector2(plot.position.x, row_fit + fs * 0.35), "fit the prior to compare", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(C_MODEL, 0.55))
