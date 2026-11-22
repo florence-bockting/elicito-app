@@ -66,5 +66,6 @@ def test_real_elicito_independent_panel(tmp_path):
     assert {(u["phase"], u["phases"]) for u in updates if u["stage"] == "Training"} == {(1, 2), (2, 2)}
     # no pooling: each expert's prior is that expert's own fit
     single = ElicitoBackend(tmp_path).fit("bart", experts["Mila"], replay_n=4)
-    assert result["expert_priors"]["Mila"] == pytest.approx(single["priors"], abs=1e-6)
+    for p, bounds in single["priors"].items():
+        assert result["expert_priors"]["Mila"][p] == pytest.approx(bounds, abs=1e-6)
     assert set(result["population"]) == {"gammap", "beta"}
